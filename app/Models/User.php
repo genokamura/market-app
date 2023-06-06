@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Notifications\FullRegistrationNotification;
+use App\Notifications\VerifyEmail;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +22,13 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $fillable = [
         'name',
+        'nickname',
         'email',
+        'zip_code',
+        'state',
+        'city',
+        'address',
+        'tel',
         'password',
     ];
 
@@ -42,4 +51,26 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail());
+    }
+
+    public function sendFullRegistrationNotification()
+    {
+        $this->notify(new FullRegistrationNotification());
+    }
+
+    public function isFullRegistered(): bool
+    {
+        return $this->email_verified_at !== null
+            && $this->name !== null
+            && $this->nickname !== null
+            && $this->zip_code !== null
+            && $this->state !== null
+            && $this->city !== null
+            && $this->address !== null
+            && $this->tel !== null;
+    }
 }
