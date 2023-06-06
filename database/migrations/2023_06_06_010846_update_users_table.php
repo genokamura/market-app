@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             // 氏名のNullを許容する
             $table->string('name')->nullable()->change();
-            // ニックネーム
-            $table->string('nickname')->after('name')->nullable();
+            // ニックネーム ログインにも使用する
+            $table->string('nickname')->after('name')->unique()->nullable();
             // メールアドレスのユニーク制約を外す
             $table->dropUnique(['email']);
             // created_atとupdated_atのデフォルト値を変更する
