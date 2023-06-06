@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FullRegistered;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,6 +27,7 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        $isFullRegisterAction = !$request->user()->isFullRegistered();
         $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {
@@ -33,6 +35,11 @@ class ProfileController extends Controller
         }
 
         $request->user()->save();
+
+        if ($isFullRegisterAction) {
+            event(new FullRegistered($request->user()));
+            return Redirect::route('register.complete');
+        }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

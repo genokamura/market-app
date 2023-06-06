@@ -15,7 +15,7 @@ return new class extends Migration
             // 氏名のNullを許容する
             $table->string('name')->nullable()->change();
             // ニックネーム
-            $table->string('nickname')->after('name')->unique()->nullable();
+            $table->string('nickname')->after('name')->nullable();
             // メールアドレスのユニーク制約を外す
             $table->dropUnique(['email']);
             // created_atとupdated_atのデフォルト値を変更する
@@ -39,6 +39,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
+            DB::statement('TRUNCATE TABLE users');
             $table->string('name')->nullable(false)->change();
             $table->dropColumn('nickname');
             $table->unique(['email']);
