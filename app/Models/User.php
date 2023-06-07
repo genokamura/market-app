@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Notifications\FullRegistrationNotification;
+use App\Notifications\PasswordResetNotification;
 use App\Notifications\VerifyEmail;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -60,6 +61,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendFullRegistrationNotification()
     {
         $this->notify(new FullRegistrationNotification());
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new PasswordResetNotification($token));
     }
 
     public function isFullRegistered(): bool
