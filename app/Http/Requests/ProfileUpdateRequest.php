@@ -16,11 +16,13 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['string', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)->where(function ($query) {
+            'name' => ['string', 'max:255'],
+            'nickname' => ['string', 'max:255', 'regex:/^[a-zA-Z0-9_]+$/u',
+                Rule::unique(User::class)->ignore($this->user()->id)->where(function ($query) {
                 return $query->whereNot('email_verified_at', null)
                              ->whereNull('deleted_at');
-            })],
-            'nickname' => ['string', 'max:255'],
+                })
+            ],
             'email' => ['email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
             'zip_code' => ['string', 'max:8'],
             'state' => ['string', 'max:255'],

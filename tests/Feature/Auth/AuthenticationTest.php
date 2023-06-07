@@ -9,11 +9,23 @@ test('login screen can be rendered', function () {
     $response->assertStatus(200);
 });
 
-test('users can authenticate using the login screen', function () {
+test('users can authenticate using the login screen with email', function () {
     $user = User::factory()->create();
 
     $response = $this->post('/login', [
-        'email' => $user->email,
+        'email_or_nickname' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect(RouteServiceProvider::HOME);
+});
+
+test('users can authenticate using the login screen with nickname', function () {
+    $user = User::factory()->create();
+
+    $response = $this->post('/login', [
+        'email_or_nickname' => $user->nickname,
         'password' => 'password',
     ]);
 
