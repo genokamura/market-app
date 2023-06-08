@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Notifications\FullRegistrationNotification;
 use App\Notifications\PasswordResetNotification;
+use App\Notifications\PasswordUpdatedNotification;
 use App\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -66,6 +67,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new PasswordResetNotification($token));
+    }
+
+    public function sendPasswordUpdatedNotification()
+    {
+        $this->notify(new PasswordUpdatedNotification());
     }
 
     public function isFullRegistered(): bool
