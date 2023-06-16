@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use App\Events\EmailAddressChanged;
 use App\Events\FullRegistered;
-use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\User\ProfileUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
