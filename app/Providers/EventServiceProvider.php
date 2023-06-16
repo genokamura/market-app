@@ -2,14 +2,15 @@
 
 namespace App\Providers;
 
+use App\Events\EmailAddressChanged;
 use App\Events\FullRegistered;
 use App\Events\PasswordUpdated;
+use App\Listeners\SendEmailAddressChangedNotification;
 use App\Listeners\SendFullRegistrationNotification;
 use App\Listeners\SendPasswordUpdatedNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -25,8 +26,14 @@ class EventServiceProvider extends ServiceProvider
         FullRegistered::class => [
             SendFullRegistrationNotification::class,
         ],
+        EmailAddressChanged::class => [
+            SendEmailAddressChangedNotification::class,
+        ],
         PasswordUpdated::class => [
             SendPasswordUpdatedNotification::class,
+        ],
+        EmailUpdateVerified::class => [
+            SendEmailUpdateVerifiedNotification::class,
         ],
     ];
 

@@ -21,6 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        DB::statement('TRUNCATE TABLE users');
         Schema::table('users', function (Blueprint $table) {
             $table->unique(['nickname']);
         });

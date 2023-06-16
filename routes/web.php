@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
         })->name('register.complete');
     });
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile-email', [ProfileController::class, 'updateEmail'])->name('profile.update.email');
 });
 
 require __DIR__.'/auth.php';

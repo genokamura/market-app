@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\EmailAddressChangedNotification;
 use App\Notifications\FullRegistrationNotification;
 use App\Notifications\PasswordResetNotification;
 use App\Notifications\PasswordUpdatedNotification;
@@ -74,10 +75,14 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new PasswordUpdatedNotification());
     }
 
+    public function sendEmailAddressChangedNotification()
+    {
+        $this->notify(new EmailAddressChangedNotification());
+    }
+
     public function isFullRegistered(): bool
     {
-        return $this->email_verified_at !== null
-            && $this->name !== null
+        return $this->name !== null
             && $this->nickname !== null
             && $this->zip_code !== null
             && $this->state !== null
