@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\Event;
 
 test('profile page is displayed', function () {
     $user = User::factory()->create();
@@ -19,7 +20,6 @@ test('profile information can be updated', function () {
         ->actingAs($user)
         ->patch('/profile', [
             'name' => 'Test User',
-            'email' => 'test@example.com',
         ]);
 
     $response
@@ -29,8 +29,50 @@ test('profile information can be updated', function () {
     $user->refresh();
 
     $this->assertSame('Test User', $user->name);
+});
+
+test('profile updation with email should throw error', function () {
+    $user = User::factory()->create();
+
+    $response = $this
+        ->actingAs($user)
+        ->get('/profile');
+
+    $response = $this
+        ->actingAs($user)
+        ->patch('/profile', [
+            'name' => 'Test User',
+            'email' => 'example.com',
+        ]);
+
+    $response
+        ->assertSessionHasErrors('email')
+        ->assertRedirect('/profile');
+
+    $user->refresh();
+
+    $this->assertNotSame('Test User', $user->name);
+});
+
+test('email can be updated', function () {
+    $user = User::factory()->create();
+
+    Event::fake();
+
+    $response = $this
+        ->actingAs($user)
+        ->patch('/profile-email', [
+            'email' => 'test@example.com',
+        ]);
+
+    $response
+        ->assertSessionHasNoErrors()
+        ->assertRedirect('/profile');
+
+    $user->refresh();
     $this->assertSame('test@example.com', $user->email);
     $this->assertNull($user->email_verified_at);
+    Event::assertDispatched('App\Events\EmailAddressChanged');
 });
 
 test('email verification status is unchanged when the email address is unchanged', function () {
@@ -38,8 +80,7 @@ test('email verification status is unchanged when the email address is unchanged
 
     $response = $this
         ->actingAs($user)
-        ->patch('/profile', [
-            'name' => 'Test User',
+        ->patch('/profile-email', [
             'email' => $user->email,
         ]);
 

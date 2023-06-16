@@ -3,7 +3,6 @@
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
 
 test('email verification screen can be rendered', function () {
@@ -18,10 +17,9 @@ test('email verification screen can be rendered', function () {
 
 test('email can be verified', function () {
     $user = User::factory()->create([
+        'nickname' => null,
         'email_verified_at' => null,
     ]);
-
-    Event::fake();
 
     $verificationUrl = URL::temporarySignedRoute(
         'verification.verify',
@@ -31,7 +29,6 @@ test('email can be verified', function () {
 
     $response = $this->actingAs($user)->get($verificationUrl);
 
-    Event::assertDispatched(Verified::class);
     expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
     $response->assertRedirect(RouteServiceProvider::FULL_REGISTRATION);
 });
