@@ -3,8 +3,8 @@
 namespace App\Services\Item;
 
 use App\Models\Category;
-use App\Models\Item;
 use App\Models\Image;
+use App\Models\Item;
 
 class ExhibitService
 {
