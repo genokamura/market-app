@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\Item\ExhibitController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,15 +19,28 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified', 'verified.full'])->name('dashboard');
 
-Route::get('/register/full', function () {
-    return view('auth.register-full');
-})->middleware(['auth', 'verified'])->name('register.full');
+Route::middleware(['auth', 'verified', 'verified.full'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    Route::get('/exhibit', [ExhibitController::class, 'create'])->name('item.exhibit.create');
+    Route::post('/exhibit', [ExhibitController::class, 'store'])->name('item.exhibit.store');
+    Route::get('/exhibit/complete/{id}', [ExhibitController::class, 'complete'])->name('item.exhibit.complete');
+
+});
 
 Route::middleware('auth')->group(function () {
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile-email', [ProfileController::class, 'updateEmail'])->name('profile.update.email');
+
+    Route::middleware(['verified'])->group(function () {
+        Route::get('/register/full', function () {
+            return view('auth.register-full');
+        })->name('register.full');
+    });
+
     Route::middleware('verified.full')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -34,8 +48,6 @@ Route::middleware('auth')->group(function () {
             return view('auth.register-complete');
         })->name('register.complete');
     });
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::patch('/profile-email', [ProfileController::class, 'updateEmail'])->name('profile.update.email');
 });
 
 require __DIR__.'/auth.php';
