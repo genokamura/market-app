@@ -8,19 +8,15 @@ test('Route::post exhibitItem', function () {
 
     $file = UploadFileHelper::makeFakeImage('test.jpg');
     $response = $this->actingAs($user)
-                     ->post(route('item.exhibit'), [
+                     ->post(route('item.exhibit.store'), [
                          'name' => 'test',
                          'description' => 'test',
                          'price' => 100,
                          'quantity' => 1,
                          'images' => [$file],
                          'categories' => [
-                             [
-                                 'slug' => 'test',
-                             ],
-                             [
-                                 'slug' => 'test2',
-                             ],
+                             0 => 'test1',
+                             1 => 'test2',
                          ],
                      ]);
 

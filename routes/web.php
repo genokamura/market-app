@@ -25,8 +25,9 @@ Route::middleware(['auth', 'verified', 'verified.full'])->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::post('/exhibit', [ExhibitController::class, 'exhibitItem'])->name('item.exhibit');
-    Route::get('/exhibit/complete/{id}', [ExhibitController::class, 'exhibitComplete'])->name('item.exhibit.complete');
+    Route::get('/exhibit', [ExhibitController::class, 'create'])->name('item.exhibit.create');
+    Route::post('/exhibit', [ExhibitController::class, 'store'])->name('item.exhibit.store');
+    Route::get('/exhibit/complete/{id}', [ExhibitController::class, 'complete'])->name('item.exhibit.complete');
 
 });
 

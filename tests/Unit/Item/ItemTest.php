@@ -49,7 +49,7 @@ class ItemTest extends TestCase
     {
         $item = Item::factory()->create();
         $category = Category::factory()->create();
-        $item->addCategory($category['id']);
+        $item->addCategory($category);
 
         $this->assertDatabaseHas('item_categories', [
             'item_id' => $item->id,

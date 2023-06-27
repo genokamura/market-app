@@ -27,9 +27,9 @@ class ExhibitItemRequest extends FormRequest
             'description' => 'required|string|max:255',
             'quantity' => 'required|numeric',
             'images' => 'required|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'categories' => 'required|array',
-            'categories.*.slug' => 'required|string|max:32',
+            'categories.*' => 'required|string',
         ];
     }
 

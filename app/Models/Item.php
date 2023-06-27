@@ -26,7 +26,7 @@ class Item extends Model
         return $this->belongsToMany(Category::class, 'item_categories');
     }
 
-    public static function register($params): Item
+    public static function register($params): Self
     {
         $item = new Item();
         $item->fill($params);
@@ -34,8 +34,8 @@ class Item extends Model
         return $item;
     }
 
-    public function addCategory($category_id)
+    public function addCategory($category)
     {
-        $this->categories()->attach($category_id);
+        $this->categories()->attach($category->id);
     }
 }

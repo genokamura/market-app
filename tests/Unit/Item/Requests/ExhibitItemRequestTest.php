@@ -30,12 +30,8 @@ class ExhibitItemRequestTest extends TestCase
             'quantity' => 1,
             'images' => [$file],
             'categories' => [
-                [
-                    'slug' => 'test',
-                ],
-                [
-                    'slug' => 'test2',
-                ],
+                0 => 'test',
+                1 => 'test2',
             ],
         ], $request->rules());
 

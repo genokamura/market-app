@@ -15,13 +15,18 @@ class ExhibitController extends Controller
         $this->exhibitService = new ExhibitService();
     }
 
-    public function exhibitItem(ExhibitItemRequest $request)
+    public function create()
+    {
+        return view('item.exhibit.create', ['categories' => $this->exhibitService->getCategories()]);
+    }
+
+    public function store(ExhibitItemRequest $request)
     {
         $result = $this->exhibitService->exhibitItem($request->validated());
         return redirect()->route('item.exhibit.complete', ['id' => strval($result['id'])]);
     }
 
-    public function exhibitComplete($id)
+    public function complete($id)
     {
         return view('item.exhibit.complete', compact(['id']));
     }

@@ -4,7 +4,7 @@ namespace App\Services\Item;
 
 use App\Models\Category;
 use App\Models\Item;
-use Illuminate\Support\Facades\Log;
+use App\Models\Image;
 
 class ExhibitService
 {
@@ -12,20 +12,29 @@ class ExhibitService
 
     public function __construct()
     {
-        $this->categories = Category::all();
+        //
+    }
+
+    public function getCategories()
+    {
+        return Category::all();
     }
 
     public function exhibitItem($param)
     {
-        Log::info($param);
+        $this->categories = $this->getCategories();
         $sellerId = auth()->user()->id;
         $param['seller_id'] = $sellerId;
         $res = Item::register($param);
 
         foreach($param['categories'] as $category) {
-            if ($this->categories->where('slug', $category['slug'])->first()) {
-                $res->addCategory($this->categories->where('slug', $category['slug'])->first());
+            $cat = $this->categories->where('slug', $category)->first();
+            if ($cat) {
+                $res->addCategory($cat);
             }
+        }
+        foreach($param['images'] as $i => $image) {
+            Image::register($image, $res->id, $i === 0);
         }
 
         return $res;

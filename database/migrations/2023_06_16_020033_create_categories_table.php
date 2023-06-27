@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('slug')->unique();
             /**
-             * category expression like 
+             * category expression like
              *
              * {parent category}/{child category}/{child category}
              *
